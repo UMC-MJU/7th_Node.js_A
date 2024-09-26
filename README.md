@@ -38,7 +38,7 @@ Copyright © Sojung Park (Bei) All rights reserved.
 
 
 ## 🍀 Members
-| [![텍스트](https://avatars.githubusercontent.com/si14444)](https://github.com/si14444) | [![텍스트](https://avatars.githubusercontent.com/u/164713708?v=4)](https://github.com/L3416yst) |
+| [![텍스트](https://avatars.githubusercontent.com/si14444?v=4)](https://github.com/si14444) | [![텍스트](https://avatars.githubusercontent.com/OhDongI?v=4)](https://github.com/OhDongI) |
 |:---:|:---:|
 | 나루/나범수 | 미르/오동이 |
 
