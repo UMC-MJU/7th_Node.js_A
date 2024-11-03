@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import { handlePostMemberMission } from "./controllers/memberMission.controller.js";
 import { handlePostMission } from "./controllers/mission.controller.js";
 import { handlePostReview } from "./controllers/review.controller.js";
 import { handleUserSignUp } from "./controllers/user.controller.js";
@@ -24,6 +25,8 @@ app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/review", handlePostReview);
 
 app.post("/api/v1/mission", handlePostMission);
+
+app.post("/api/v1/memberMission/", handlePostMemberMission);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
