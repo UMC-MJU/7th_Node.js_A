@@ -1,25 +1,60 @@
-import { pool } from "../db.config.js";
-export const checkMissionAlreadyProgress = async (member_id, mission_id) => {
-    const conn = await pool.getConnection();
-    try {
-        const [rows] = await conn.query(
-            "SELECT 1 FROM member_mission WHERE member_id = ? AND mission_id = ? AND status = '진행중'",
-            [member_id, mission_id]
-        );
-        return rows.length > 0;
-    } finally {
-        conn.release();
-    }
+import { prisma } from "../db.config.js";
+
+export const checkMissionAlreadyProgress = async (memberId, missionId) => {
+    const existingMission = await prisma.memberMission.findFirst({
+        where: {
+            memberId: memberId,
+            missionId: missionId,
+            status: "진행중",
+        },
+    });
+    return existingMission !== null; 
 };
+
+
 export const addMissionProgress = async (data) => {
-    const conn = await pool.getConnection();
-    try {
-        const [result] = await conn.query(
-            "INSERT INTO member_mission (member_id, mission_id, status, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
-            [data.member_id, data.mission_id, data.status]
-        );
-        return result.insertId;
-    } finally {
-        conn.release();
-    }
+    const newMission = await prisma.memberMission.create({
+        data: {
+            memberId: data.member_id,
+            missionId: data.mission_id,
+            status: data.status,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+    });
+    return newMission.id; 
+};
+
+//진행 중인 미션 목록
+export const getOngoingMissions = async (memberId, cursor, pageSize = 10) => {
+    return await prisma.memberMission.findMany({
+        where: {
+            memberId: memberId,
+            status: "진행중"
+        },
+        select: {
+            id: true,
+            status: true,
+            createdAt: true,
+            mission: {
+                select: {
+                    id: true,
+                    reward: true,
+                    deadline: true,
+                    missionSpec: true,
+                    store: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
+        },
+        orderBy: {
+            createdAt: "desc"
+        },
+        cursor: cursor ? { id: cursor } : undefined,  // 커서 설정
+        skip: cursor ? 1 : 0,  
+        take: pageSize  
+    });
 };
