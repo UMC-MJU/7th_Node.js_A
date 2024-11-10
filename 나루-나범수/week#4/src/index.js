@@ -2,8 +2,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { handlePostMemberMission } from "./controllers/memberMission.controller.js";
-import { handlePostMission } from "./controllers/mission.controller.js";
-import { handlePostReview } from "./controllers/review.controller.js";
+import {
+  handleListMyMission,
+  handleListStoreMissions,
+  handlePostMission,
+} from "./controllers/mission.controller.js";
+import {
+  handleListMyReviews,
+  handleListStoreReviews,
+  handlePostReview,
+} from "./controllers/review.controller.js";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 
 dotenv.config();
@@ -27,6 +35,14 @@ app.post("/api/v1/review", handlePostReview);
 app.post("/api/v1/mission", handlePostMission);
 
 app.post("/api/v1/memberMission/", handlePostMemberMission);
+
+app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
+
+app.get("/api/v1/user/review", handleListMyReviews);
+
+app.get("/api/v1/user/mission", handleListMyMission);
+
+app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

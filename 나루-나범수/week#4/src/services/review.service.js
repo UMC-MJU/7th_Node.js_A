@@ -1,4 +1,10 @@
-import { addReview } from "../repositories/review.repository.js";
+import {
+  addReview,
+  getAllMyReviews,
+  getAllStoreReviews,
+} from "../repositories/review.repository.js";
+
+import { responseFromReviews } from "../dtos/review.dto.js";
 
 export const postReview = async (data) => {
   const reviewPostId = await addReview({
@@ -15,4 +21,14 @@ export const postReview = async (data) => {
   }
 
   return { message: "성공" };
+};
+
+export const listStoreReviews = async (storeId, cursor) => {
+  const reviews = await getAllStoreReviews(storeId, cursor);
+  return responseFromReviews(reviews);
+};
+
+export const listMyReviews = async (userId, cursor) => {
+  const reviews = await getAllMyReviews(userId, cursor);
+  return responseFromReviews(reviews);
 };
