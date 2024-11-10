@@ -1,4 +1,8 @@
-import { addMission } from "../repositories/mission.repository.js";
+import {
+  addMission,
+  getMyMission,
+  getStoreMission,
+} from "../repositories/mission.repository.js";
 
 export const postMission = async (data) => {
   const reviewPostId = await addMission({
@@ -16,4 +20,14 @@ export const postMission = async (data) => {
   }
 
   return { message: "성공" };
+};
+
+export const listMyMission = async () => {
+  const missions = await getMyMission();
+  return missions;
+};
+
+export const listStoreMission = async (storeId, cursor) => {
+  const missions = await getStoreMission(storeId, cursor);
+  return missions;
 };

@@ -1,46 +1,45 @@
-import { pool } from "../db.config.js";
+import { prisma } from "../db.config.js";
 
 export const addMemberMission = async (data) => {
-  const conn = await pool.getConnection();
-
   try {
-    // 이미 진행중인 미션인지 검증
-    // 토큰 검증 단계를 안 나갔기 떄문에 유저는 id=1로 가정
-    const [confirm] = await pool.query(
-      `SELECT EXISTS(SELECT 1 FROM member_mission WHERE mission_id = ? and member_id = 1) as isExistMission`,
-      data.mission_id
-    );
+    // 이미 진행 중인 미션인지 검증
+    const existingMission = await prisma.memberMission.findFirst({
+      where: {
+        mission_id: data.mission_id,
+        member_id: 1, // 토큰 검증이 없는 상태로, 회원 ID를 1로 가정
+      },
+    });
 
-    if (confirm[0].isExistMission) {
+    if (existingMission) {
       return null;
     }
 
-    const [confirmMission] = await pool.query(
-      `SELECT EXISTS(SELECT 1 FROM mission WHERE id = ?) as isExistMission`,
-      [data.mission_id] // 여기도 배열 형태로 변경
-    );
+    // 미션 존재 여부 확인
+    const missionExists = await prisma.mission.findUnique({
+      where: {
+        id: data.mission_id,
+      },
+    });
 
-    if (!confirmMission[0].isExistMission) {
+    if (!missionExists) {
       throw new Error("존재하지 않는 미션입니다.");
     }
 
-    const [result] = await pool.query(
-      `INSERT INTO member_mission (member_id, mission_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?);`,
-      [
-        data.member_id,
-        data.mission_id,
-        data.status,
-        data.created_at,
-        data.updated_at,
-      ]
-    );
+    // 새로운 미션 추가
+    const newMission = await prisma.memberMission.create({
+      data: {
+        member_id: data.member_id,
+        mission_id: data.mission_id,
+        status: data.status,
+        created_at: data.created_at,
+        updated_at: data.updated_at,
+      },
+    });
 
-    return result.insertId;
+    return newMission.id;
   } catch (err) {
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
-  } finally {
-    conn.release();
   }
 };
