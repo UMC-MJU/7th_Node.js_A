@@ -1,3 +1,4 @@
+import { MissionInProgressError } from "../error.js";
 import { addMemberMission } from "../repositories/memberMission.repository.js";
 
 export const postMemberMission = async (data) => {
@@ -11,7 +12,7 @@ export const postMemberMission = async (data) => {
 
   // 이미 진행중인 미션인지 검증
   if (reviewPostId === null) {
-    throw new Error("이미 도전중인 미션입니다.");
+    throw new MissionInProgressError("이미 도전 중인 미션입니다.", { reviewPostId });
   }
 
   return { message: "성공" };

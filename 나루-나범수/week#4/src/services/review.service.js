@@ -1,3 +1,4 @@
+import { EmptyStoreError } from "../error.js";
 import {
   addReview,
   getAllMyReviews,
@@ -17,7 +18,7 @@ export const postReview = async (data) => {
 
   // 가게 존재 검증
   if (reviewPostId === null) {
-    throw new Error("가게가 존재하지 않습니다.");
+    throw new EmptyStoreError("가게가 존재하지 않습니다.", data);
   }
 
   return { message: "성공" };
