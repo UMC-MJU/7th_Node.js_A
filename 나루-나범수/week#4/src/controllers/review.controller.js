@@ -11,7 +11,7 @@ export const handlePostReview = async (req, res, next) => {
   console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
 
   const review = await postReview(bodyToReview(req.body));
-  res.status(StatusCodes.OK).json({ result: review });
+  res.status(StatusCodes.OK).success(review);
 };
 
 export const handleListStoreReviews = async (req, res, next) => {
