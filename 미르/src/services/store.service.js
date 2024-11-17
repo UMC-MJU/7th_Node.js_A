@@ -1,9 +1,14 @@
-import { checkRegionExists, addStore ,getStoreMissions} from "../repositories/store.repository.js";
+
+import { DuplicateRegionNotFoundError } from "../errors.js";
+import { checkRegionExists, addStore } from "../repositories/store.repository.js";
+
+
 //해당 가게에 속할 지역이 존재하는지 -> 잘못 짬 ...?..
+
 export const addStoreService = async (data) => {
     const regionExists = await checkRegionExists(data.region_id);
     if (!regionExists) {
-        throw new Error("해당 지역이 존재하지 않습니다.");
+        throw new DuplicateRegionNotFoundError("해당 지역이 존재하지 않습니다.");
     }
     //가게데이터 DB에 추가
     const storeId = await addStore(data);

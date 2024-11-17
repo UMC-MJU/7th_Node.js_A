@@ -1,8 +1,11 @@
-import { checkStoreExists, addReview, addReviewImages,getUserReviews } from "../repositories/review.repository.js";
+
+import { DuplicateReviewError } from "../errors.js";
+import { checkStoreExists, addReview, addReviewImages } from "../repositories/review.repository.js";
+
 export const addReviewService = async (data) => {
   const storeExists = await checkStoreExists(data.store_id);
   if (!storeExists) {
-    throw new Error("Store does not exist");
+    throw new DuplicateReviewError("가게가 존재하지 않습니다.",data);
   }
   const reviewId = await addReview(data);
   if (data.images && data.images.length > 0) {
