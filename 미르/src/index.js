@@ -3,8 +3,10 @@ import dotenv from "dotenv";
 import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
-import { handleAddStore } from "./controllers/store.controller.js";
-import { handleAddMissionProgress } from "./controllers/mission.controller.js";
+import { handleAddStore,handleGetStoreMissions } from "./controllers/store.controller.js";
+import { handleAddMissionProgress, handleGetOngoingMissions } from "./controllers/mission.controller.js";
+import { handleGetUserReviews } from "./controllers/review.controller.js";
+
 
 dotenv.config();
 
@@ -45,7 +47,9 @@ app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/stores/:storeId/reviews", handleAddReview); 
 app.post("/api/v1/regions/:regionId/stores", handleAddStore);
 app.post("/api/v1/stores/:storeId/missions/in-progress", handleAddMissionProgress);
-
+app.get("/api/v1/users/:userId/reviews", handleGetUserReviews);
+app.get("/api/v1/stores/:storeId/missions", handleGetStoreMissions);
+app.get("/api/v1/members/:memberId/missions/ongoing", handleGetOngoingMissions);
 
 /**
  * 전역 오류를 처리하기 위한 미들웨어
