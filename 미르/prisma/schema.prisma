@@ -148,3 +148,12 @@ model ReviewImage {
 
   @@map("review_image")
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text 
+  expiresAt DateTime @map("expires_at")
+
+  @@map("session")
+}
